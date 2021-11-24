@@ -2,8 +2,8 @@
 
 Crypto profile applicaiton provide details of coins invested which include:
  - Coin Latest price
- - Profi and loss per coin
- - Net Value: profil or loss 
+ - Profit OR loss per coin
+ - Net Value: profit or loss 
 
 This application making API Calls to the website - https://coinmarketcap.com/
 
