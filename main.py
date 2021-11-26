@@ -2,6 +2,8 @@ import requests
 import json
 from tkinter import *
 
+# Adding tkinter class and basic settings for GUI
+
 pycrypto = Tk()
 pycrypto.title("iCrypto Portfolio")
 pycrypto.iconbitmap('icon.ico')
