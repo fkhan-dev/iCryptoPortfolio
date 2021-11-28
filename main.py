@@ -1,12 +1,26 @@
 import requests
 import json
 from tkinter import *
+import sqlite3
 
 # Adding tkinter class and basic settings for GUI
 
 pycrypto = Tk()
 pycrypto.title("iCrypto Portfolio")
-pycrypto.iconbitmap('icon.ico')
+#pycrypto.iconbitmap('icon.ico')
+
+con = sqlite3.connect('cryptoCurrency.db')
+cObj =  con.cursor()
+cObj.execute("CREATE TABLE IF NOT EXISTS coin_detail(id INTEGER PRIMARY KEY, symbol TEXT, quantity INTEGER, price REAL)")
+
+def insertValues (id,symbol,quantity,price):
+    cObj.execute("INSERT INTO coin_detail values (?,?,?,?)",(id,symbol,quantity,price))
+    con.commit()
+
+def display():
+    cObj.execute("select * from coin_detail")
+    result = cObj.fetchall()
+    print (result)
 
 def font_color(amount):
     if amount > 0:
@@ -21,28 +35,32 @@ def my_portfolio():
 
     api = json.loads(api_request.content)  # capturing contents in api variable
 
-    coins = [
-                {
-                "symbol":"BTC",
-                "quantity":2,
-                "purchase_price":56000
-                 },
-                {
-                "symbol":"SOL",
-                "quantity":10,
-                "purchase_price":1500
-                },
-                {
-                "symbol": "ETH",
-                "quantity": 10,
-                "purchase_price": 4000
-                },
-                {
-                "symbol": "XRP",
-                "quantity": 10000,
-                "purchase_price": 0.5
-                }
-             ]
+    # coins = [
+    #             {
+    #             "symbol":"BTC",
+    #             "quantity":2,
+    #             "purchase_price":56000
+    #              },
+    #             {
+    #             "symbol":"SOL",
+    #             "quantity":10,
+    #             "purchase_price":1500
+    #             },
+    #             {
+    #             "symbol": "ETH",
+    #             "quantity": 10,
+    #             "purchase_price": 4000
+    #             },
+    #             {
+    #             "symbol": "XRP",
+    #             "quantity": 10000,
+    #             "purchase_price": 0.5
+    #             }
+    #          ]
+    #
+
+    cObj.execute("select * from coin_detail")
+    coins = cObj.fetchall()
 
     net_all = 0  # Declare variable for counting total value for all coins
     coin_row = 1 # declared variabel
@@ -51,19 +69,19 @@ def my_portfolio():
 
     for i in range(0,50):
         for coin in coins:
-            if api["data"][i]["symbol"] == coin["symbol"]:
-                total_purchase = coin["purchase_price"] * coin["quantity"]
-                total_value = api["data"][i]["quote"]["USD"]["price"] * coin["quantity"]
+            if api["data"][i]["symbol"] == coin[1]:
+                total_purchase = coin[3] * coin[2]
+                total_value = api["data"][i]["quote"]["USD"]["price"] * coin[2]
                 net = total_value - total_purchase
-                net_coin = api["data"][i]["quote"]["USD"]["price"] - coin["purchase_price"]
+                net_coin = api["data"][i]["quote"]["USD"]["price"] - coin[3]
                 net_all += net
                 coin_total_purchase += total_purchase
-                coin_numbers += coin["quantity"]
+                coin_numbers += coin[2]
 
                 # print (api["data"][i]["name"] + "--" + api["data"][i]["symbol"])
                 # print ("Current Price : {0:.2f}".format(api["data"][i]["quote"]["USD"]["price"])) #Example of fetching price in USD
                 # print ("Total Purchase Amount: ",total_purchase)
-                # print ("Coin Purchase: ",coin["quantity"])
+                # print ("Coin Purchase: ",coin[2])
                 # print ("Current Value: {0:.2f}".format(total_value))
                 # print ("Net Position: {0:.2f}".format(net))
                 # print ("Per Coin P/L: {0:.2f}".format(net_coin))
@@ -75,10 +93,10 @@ def my_portfolio():
                 price = Label(pycrypto, text="{0:.2f}".format(api["data"][i]["quote"]["USD"]["price"]), bg="grey", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
                 price.grid(row=coin_row, column=1, sticky=N + E + W + S)
 
-                no_coins = Label(pycrypto, text=coin["quantity"], bg="#F3F4F6", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
+                no_coins = Label(pycrypto, text=coin[2], bg="#F3F4F6", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
                 no_coins.grid(row=coin_row, column=2, sticky=N + E + W + S)
 
-                amount_paid = Label(pycrypto, text=total_purchase, bg="#F3F4F6", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
+                amount_paid = Label(pycrypto, text="{0:.2f}".format(total_purchase), bg="#F3F4F6", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
                 amount_paid.grid(row=coin_row, column=3, sticky=N + E + W + S)
 
                 current_val = Label(pycrypto, text="{0:.2f}".format(total_value), bg="#F3F4F6", fg="black", font="Lato 12 ", padx="2", pady="2", borderwidth=2, relief="groove")
