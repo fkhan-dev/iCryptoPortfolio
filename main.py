@@ -37,7 +37,7 @@ def app_nav ():
 def my_portfolio():
     # Passing URL to the variable
     api_request = requests.get(
-        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=50&convert=USD&CMC_PRO_API_KEY=0aa3af01-3878-4ec5-8d52-cdd825aa6bad")
+        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=50&convert=USD&CMC_PRO_API_KEY")
 
     api = json.loads(api_request.content)  # capturing contents in api variable
 
