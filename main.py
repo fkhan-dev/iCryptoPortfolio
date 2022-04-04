@@ -5,6 +5,7 @@ from tkinter import messagebox , Menu
 import sqlite3
 
 # Adding tkinter class and basic settings for GUI
+# Adding demo python App
 
 pycrypto = Tk()
 pycrypto.title("iCrypto Portfolio")
