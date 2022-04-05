@@ -6,6 +6,7 @@ import sqlite3
 
 # Adding tkinter class and basic settings for GUI
 # Adding demo python App
+# Added testing branch
 
 pycrypto = Tk()
 pycrypto.title("iCrypto Portfolio")
@@ -16,6 +17,8 @@ cObj =  con.cursor()
 cObj.execute("CREATE TABLE IF NOT EXISTS coin_detail(id INTEGER PRIMARY KEY, symbol TEXT, quantity INTEGER, price REAL)")
 
 def reset():
+
+   end
     for cell in pycrypto.winfo_children():  # it caputred all cells on the GUI window
         cell.destroy()
 
